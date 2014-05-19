@@ -69,7 +69,7 @@ device.on("motion", function(state) {
         type = state ? "start" : "end"
     };
 
-    // send an event sycronously
+    // send an event synchronously
     local result = keen.sendEvent("motion", eventData);
     server.log(result.statuscode + ": " + result.body);
 });
