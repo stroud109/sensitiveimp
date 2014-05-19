@@ -59,8 +59,8 @@ class KeenIO {
 
 /**************************** Begin KeenIO logging here *************************/
 
-const KEEN_PROJECT_ID = "5374e56f73f4bb065b000005";
-const KEEN_WRITE_API_KEY = "8f2ae9799982e19df2a94d64f6ad2126e2243adb1202a4e48e26c559135d37e0da98bd18547ed16b280f435ae2e880fe72993837113a26b43f349c9d604b80816e5a2954e5c5a60205f8166720bfdc07e7e12215998a11444cd52ba92c40ef8e05e54a48127e04811fc9a704be49af3a";
+const KEEN_PROJECT_ID = "FILL THIS IN";
+const KEEN_WRITE_API_KEY = "FILL THIS IN";
 
 keen <- KeenIO(KEEN_PROJECT_ID, KEEN_WRITE_API_KEY);
 device.on("motion", function(state) {

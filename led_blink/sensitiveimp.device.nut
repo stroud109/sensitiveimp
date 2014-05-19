@@ -1,4 +1,7 @@
-imp.configure("Hello World", [], []);
+/* Borrowed from http://electricimp.com/docs/gettingstarted/2-helloworld/ */
+
+// Log a "hello world" statement to make sure you're online.
+// This should show up in the Imp IDE logs.
 server.log("Hello from the device");
 
 // create a global variabled called led,
