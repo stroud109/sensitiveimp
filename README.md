@@ -1,8 +1,9 @@
-# Logging event data using an Electric Imp, PIR Sensor and Keen IO
+# KeenIO + Electric Imp + PIR Sensor
 This repo covers, in order:
-1. `led_blink` (an Electric Imp "hello world" with a blinking LED)
-2. `pir_sensor` (a PIR sensor "hello world" that prints statements to the IDE log panel)
-3. `pir_events` (where basic motion event data is sent to KeenIO)
+
+    1. `led_blink` (an Electric Imp "hello world" with a blinking LED)
+    2. `pir_sensor` (a PIR sensor "hello world" that prints statements to the IDE log panel)
+    3. `pir_events` (where basic motion event data is sent to KeenIO)
 
 ## led_blink
 To start off with your Electric Imp, try using this [tutorial](http://electricimp.com/docs/gettingstarted/2-helloworld/) to get an LED blinking.
