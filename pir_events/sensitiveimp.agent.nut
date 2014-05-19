@@ -1,4 +1,11 @@
+// Log a "hello world" statement to make sure you're online.
+// This should show up in the Imp IDE logs.
 server.log("hello from the agent!");
+
+/*****************************************************************************
+For more information on how to connect your event data to KeenIO, check out
+ https://github.com/electricimp/reference/tree/master/webservices/keenio
+ *****************************************************************************/
 
 class KeenIO {
     _baseUrl = "https://api.keen.io/3.0/projects/";
