@@ -15,11 +15,14 @@ To get your PIR sensor connected, check out these pages on [setup](https://learn
 
 For specific information on configuring digital pins, I used these [two](http://electricimp.com/docs/examples/digitalin-button/) [pages](http://electricimp.com/docs/api/hardware/pin/configure/) from Electric Imp's dev center. I also used [codegirljp's advice](http://codergirljp.blogspot.com/2014/01/electric-imp-hello-world-motion-sensor.html) with regards to using `pin1` and `DIGITAL_IN_WAKEUP`.
 
+![Alt text](imp_led_pir.jpg "Materials: Electric Imp, April Board, breadboard, one LED, one resistor, some wires and a PIR motion sensor")
 
 ## pir_events
 Sending your [event data](https://keen.io/blog/53958349217/analytics-for-hackers-how-to-think-about-event-data) to [KeenIO](https://keen.io/) only requires a few small changes to the `pir_sensor` code, detailed above. To begin, check out the [getting started guide](https://keen.io/docs/getting-started-guide/) and this super helpful [keenio agent.nut](https://github.com/electricimp/reference/tree/master/webservices/keenio).
 
 Note: Event meta data logged to Keen includes ["timestamp", "created_at" and "id"](https://keen.io/docs/event-data-modeling/event-data-intro/#timestamp-data-type).
+
+![Alt text](keen_data.png "Here's how an event looks on Keen.")
 
 #### Additional Resources
 Electric Imp code is written in Squirrel. For a Squirrel Sublime Text highlighter, check out: [https://github.com/micheg/sublime_squirrel](https://github.com/micheg/sublime_squirrel)
