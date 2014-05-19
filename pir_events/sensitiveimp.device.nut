@@ -1,6 +1,6 @@
-// PIR sensor tester
+// PIR motion sensor
 
-server.log("PIR hello world from the device")
+server.log("hello from the device!")
 
 pir_sensor <- hardware.pin1;
 led <- hardware.pin5;
@@ -11,7 +11,8 @@ led.write(0);
 function motionDetected()
 {
     local pir_state = pir_sensor.read();
-    agent.send("message", format("PIR state is %d", pir_state))
+    // agent.send("message", format("PIR state is %d", pir_state));
+    agent.send("motion", pir_state);
     if (pir_state == 1)
     {
         // LED on when motion is detected
