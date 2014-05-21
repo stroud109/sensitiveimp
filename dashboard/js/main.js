@@ -152,13 +152,15 @@
             dataTable2.addRows(bucketSeries('Yesterday', b.result, 10, 1));
             dataTable3.addRows(bucketSeries('Day Before', c.result, 10, 1));
 
-            var options = {
-                timeline: { showRowLabels: true }
-            };
-
-            chart1.draw(dataTable1, options);
-            chart2.draw(dataTable2, options);
-            chart3.draw(dataTable3, options);
+            chart1.draw(dataTable1, {
+                timeline: { singleColor: '#E84A86' }
+            });
+            chart2.draw(dataTable2, {
+                timeline: { singleColor: '#FE3842' }
+            });
+            chart3.draw(dataTable3, {
+                timeline: { singleColor: '#FF724A' }
+            });
         });
     });
 
