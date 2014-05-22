@@ -48,7 +48,7 @@ Note: Event meta data logged to Keen includes ["timestamp", "created_at" and "id
 ![Alt text](images/keen_data.png "Here's how an event looks on Keen.")
 
 ##dashboard
-For this project, I put together a dashboard that helps me quickly see the past three days of motion recorded in my home. The graphs show periods of activity in a 24 hour time period. I created the graphs using the [timeline chart](https://developers.google.com/chart/) from Google, and doing a bit of data massaging to get Keen’s data to work with the charts.
+For this project, I put together a [dashboard](http://stroud109.github.io/sensitiveimp/) that helps me quickly see the past three days of motion recorded in my home. The graphs show periods of activity in a 24 hour time period. I created the graphs using the [timeline chart](https://developers.google.com/chart/) from Google, and doing a bit of data massaging to get Keen’s data to work with the charts.
 
 ![Alt text](images/dashboard.png "Sleep / Home Activity Dashboard")
 
