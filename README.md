@@ -1,5 +1,7 @@
 # KeenIO + Electric Imp + PIR Sensor
-I've created a simple Electric Imp device that uses KeenIO to track my sleep schedule. In a nutshell, my device is just a simple PIR motion sensor that is connected to an Electric Imp, which in turn, is connected to KeenIO. The PIR motion sensor is a relatively cheap ($10) little sensor that detects changes in levels of infrared radiation (e.g. human movement) within 20 feet. If well-placed (probably wherever you spend the bulk of your time at home), the PIR sensor can tell you when you're active in your home and when you're not. For me, the long periods of inactivity correlate to the times when I'm sleeping or at work.
+_A simple Electric Imp device that uses KeenIO to track my sleep schedule_
+
+In a nutshell, my device is just a PIR motion sensor that is connected to an Electric Imp, which in turn, is connected to KeenIO. The PIR motion sensor is a relatively cheap ($10) little sensor that detects changes in levels of infrared radiation (e.g. human movement) within 20 feet. If well-placed (probably wherever you spend the bulk of your time at home), the PIR sensor can tell you when you're active in your home and when you're not. For me, the long periods of inactivity correlate to the times when I'm sleeping or at work.
 
 This repo covers, in order:
 
@@ -34,13 +36,11 @@ For specific information on configuring digital pins, I used these [two](http://
 ## pir_events
 Sending your [event data](https://keen.io/blog/53958349217/analytics-for-hackers-how-to-think-about-event-data) to [KeenIO](https://keen.io/) only requires a few small changes to the `pir_sensor` code, detailed above. To begin, take a look at Keen's [getting started guide](https://keen.io/docs/getting-started-guide/) and this super helpful [keenio agent.nut](https://github.com/electricimp/reference/tree/master/webservices/keenio).
 
-There are six basic steps for this part:
-
-1. Create a free KeenIO account and login
-2. Create a new project on KeenIO
-3. Add a [snippet of Keen's code]((https://github.com/electricimp/reference/tree/master/webservices/keenio)) to your agent.nut code
-4. Add your Keen Project ID and your Keen Write API Key to your agent.nut code
-5. Confirm that your device is still connected to your agent (e.g. `agent.send("motion", pir_state);` in device.nut and `device.on("motion", function (state) {` in agent.nut)
+1. Create a free KeenIO account and login.
+2. Create a new project on KeenIO.
+3. Add a [snippet of Keen's code]((https://github.com/electricimp/reference/tree/master/webservices/keenio)) to your agent.nut code.
+4. Add your Keen Project ID and your Keen Write API Key to your agent.nut code.
+5. Confirm that your device is still connected to your agent (e.g. `agent.send("motion", pir_state);` in device.nut and `device.on("motion", function (state) {` in agent.nut).
 6. Click "Build and Run" in your Imp IDE and check the logs. (You may need to reload the page).
 
 Note: Event meta data logged to Keen includes ["timestamp", "created_at" and "id"](https://keen.io/docs/event-data-modeling/event-data-intro/#timestamp-data-type).
