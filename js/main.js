@@ -148,9 +148,9 @@
 
         // Wait for all three series to load before preparing the timeline
         $.when(todayDeferred, yesterdayDeferred, dayBeforeYesterdayDeferred).done(function (a, b, c) {
-            dataTable1.addRows(bucketSeries('Today', a.result, 10, 1));
-            dataTable2.addRows(bucketSeries('Yesterday', b.result, 10, 1));
-            dataTable3.addRows(bucketSeries('Day Before', c.result, 10, 1));
+            dataTable1.addRows(bucketSeries('Past 24h', a.result, 10, 1));
+            dataTable2.addRows(bucketSeries('day before', b.result, 10, 1));
+            dataTable3.addRows(bucketSeries('day before that', c.result, 10, 1));
 
             chart1.draw(dataTable1, {
                 timeline: { singleColor: '#E84A86' }
