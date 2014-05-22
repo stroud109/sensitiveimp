@@ -8,7 +8,7 @@ This repo covers, in order:
 1. `led_blink`, an Electric Imp "hello world" with a blinking LED.
 2. `pir_sensor`, which uses log statements to test the functionality of a PIR sensor.
 3. `pir_events`, where basic motion event data is sent to KeenIO.
-4. `dashboard`, where data is visualized.
+4. dashboard (`index.html`), where data is visualized.
 
 Materials I used: an Electric Imp, April Board, breadboard, PIR motion sensor, 330 ohm resistor, some wires, an LED (or several) and a [free KeenIO account](https://keen.io/).
 
