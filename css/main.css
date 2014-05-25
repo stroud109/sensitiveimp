@@ -4,7 +4,7 @@ body, html {
 }
 
 .container {
-    width: 850px;
+    width: 900px;
     border: thin solid #C0BEBE;
     border-radius: 3px;
     margin-bottom: 5%;
@@ -19,7 +19,7 @@ body, html {
     /*margin-bottom: 5%;*/
     border-bottom: thin solid #E9E7E7;
     /*width: 100%;*/
-    /*font-family: Garamond;*/
+    font-family: 'Raleway', sans-serif;
 }
 .title h1 {
     margin: 13px 0;
@@ -27,14 +27,15 @@ body, html {
 }
 
 .description {
-    width: 450px;
     margin: 30px auto;
+    padding: 10px 100px;
+    font-family: 'Raleway', sans-serif;
 }
 
 .chart {
-    width: 800px;
-    height: 125px;
-    position: relative;
-    padding: 2%;
+    width: 840px;
+    height: 425px;
+    margin: 0 15px;
+    /*position: relative;*/
 }
 
