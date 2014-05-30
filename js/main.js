@@ -1,60 +1,27 @@
-/*
-    - Notes on the metadata -
-
-    Should have logged the day, hour, and minute of each 'start' event
-    as separate metadata. That would have allowed me to group by these
-    three fields instead of having to normalize in the javascript (also
-    could have made just a single query).
-
-    {
-        type: 'start',
-        day_of_year: 140,
-        hour: 11,
-        minute: 50
-    }
-
-*/
-
-
 (function (win) {
-    'use static';
+    'use strict';
 
-    var normalizeDate = function (date) {
-        date = new Date (date);
-        date.setFullYear(2014);
-        date.setMonth(4);
-        date.setDate(21);
-        return date;
-    };
-
-    var bucketSeries = function (name, series, allowedMisses, threshold) {
-        // Let's us take a KeenIO series and bucket any point with value over threshold
-        // by start time and end time of bucket. Use `misses` to control how many points
-        // in a row must be below threshold to consider a bucket as 'ended'.
-        var rows = [];
-
-        var absoluteStart = null;
-
+    var bucketSeries = function (series, allowedMisses, threshold) {
+        // Let's take a KeenIO series and bucket any point with value over a threshold,
+        // determined by start time and end time of bucket. Use `misses` to control how
+        // many points in a row must be below a threshold to consider a bucket as 'ended'.
+        var buckets = [];
         var activityStart = null;
         var activityEnd = null;
+        var misses = 0;
 
         _.each(series, function (point) {
 
-            // Initializing the start time we'll be working with.
-            if (!absoluteStart) {
-                absoluteStart = normalizeDate(point.timeframe.start);
-            }
-
             // If this point has recorded activity and we have been
-            // in a period of lull, then start recording activity!
+            // in a period of lull, then start recording activity.
             if (!activityStart && point.value >= threshold) {
                 misses = 0;
-                activityStart = normalizeDate(point.timeframe.start);
+                activityStart = point.timeframe.start;
             }
 
-            // If this point has a value, push the end time to this point's end time.
+            // If this point has a value, push the `timeframe.end` to this point's end time.
             if (point.value >= threshold)
-                activityEnd = normalizeDate(point.timeframe.end);
+                activityEnd = point.timeframe.end;
 
             // If we are recording activity, but we hit a point with no value,
             // then we uptick our miss count.
@@ -65,24 +32,20 @@
             // save the current start and end times as a colored block of data and reset
             // everything.
             if (activityStart && misses > allowedMisses) {
-                if (activityStart > activityEnd) {
-                    activityEnd.setHours(23)
-                    activityEnd.setMinutes(59)
-                }
-                rows.push([name, activityStart, activityEnd]);
+                buckets.push({start: new Date(activityStart), end: new Date(activityEnd)});
                 activityStart = null;
                 activityEnd = null;
                 misses = 0;
             }
         });
 
-        // rows.push(['Timeframe', new Date(_.first(series).timeframe.start), new Date(_.last(series).timeframe.end)]);
+        // If we started an activity block but didn't get the chance to add it to `buckets`,
+        // then we add it here.
+        if (activityStart && activityEnd) {
+            buckets.push({start: new Date(activityStart), end: new Date(activityEnd)});
+        }
 
-        return rows;
-
-    };
-
-    var createActivityTimelineChart = function (elementId, timeframe) {
+        return buckets;
 
     };
 
@@ -98,8 +61,8 @@
 
         // Prepare a timeline chart type from google
         // https://google-developers.appspot.com/chart/interactive/docs/gallery/timeline
-        var container1 = document.getElementById('chart_1');
-        var chart = new google.visualization.Timeline(container1);
+        var container = document.getElementById('chart');
+        var chart = new google.visualization.Timeline(container);
 
         win.drawChart = function () {
 
@@ -110,15 +73,11 @@
             dataTable.addColumn({ type: 'date', id: 'Start' });
             dataTable.addColumn({ type: 'date', id: 'End' });
 
-            // Get the current date so we can make absolute timeframe requests
+            // Get the current date so we can make absolute timeframe requests.
             var now = new Date();
-            now.setHours(0);
-
             var msPerDay = 60 * 60 * 24 * 1000;
 
-            console.log(now.toISOString())
-
-            // Get activity for a given day
+            // Get activity for a given timeframe, from Keen.
             var fetchDayData = function(rangeEnd) {
                 var dayDeferred = $.Deferred();
                 new Keen.Series("motion", {
@@ -134,25 +93,75 @@
                 return dayDeferred;
             };
 
-            var deferreds = _.map(_.range(7), fetchDayData);
-            console.log(deferreds);
+            var deferreds = _.map(_.range(14), fetchDayData);
 
-            // Wait for all three series to load before preparing the timeline
-            $.when.apply(win, deferreds).done(function (a, b, c, d, e, f, g) {
-                dataTable.addRows(bucketSeries('today', a.result, 10, 1));
-                dataTable.addRows(bucketSeries('yesterday', b.result, 10, 1));
-                dataTable.addRows(bucketSeries('3 day ago', c.result, 10, 1));
-                dataTable.addRows(bucketSeries('4 days ago', d.result, 10, 1));
-                dataTable.addRows(bucketSeries('5 days ago', e.result, 10, 1));
-                dataTable.addRows(bucketSeries('6 days ago', f.result, 10, 1));
-                dataTable.addRows(bucketSeries('7 days ago', g.result, 10, 1));
+            // Wait for all the series to load before preparing the timeline.
+            $.when.apply(win, deferreds).done(function () {
 
+                // We want to group all our data in a single array, and
+                // we want all of our data to go from smallest to greatest.
+                var all = _.flatten(_.pluck(Array.prototype.reverse.call(arguments), 'result'));
+
+                // Now we want to seperate the buckets into rows.
+                var format = d3.time.format("%m-%d");
+
+                // We want to group the data into rows starting at 5pm one day
+                // and ending at 4:59pm the next day. 17 is 5pm in JS (and military time).
+                var getGroupKey = function (bucket) {
+                    var date = new Date(bucket.timeframe.start);
+                    if (date.getHours() < 17)
+                        date = new Date(date.getTime() - msPerDay);
+                    return format(date);
+                };
+
+                var nest = d3.nest().key(getGroupKey).entries(all);
+
+                // Strip the data of year and month, and only specify whether a data
+                // point on a given row belongs to day 1 or 2.
+                var normalizeDate = function (date, cutOff) {
+                    if (date >= cutOff) {
+                        date.setDate(2);
+                    }
+                    else {
+                        date.setDate(1);
+                    }
+                    date.setYear(0);
+                    date.setMonth(0);
+                    return date;
+                };
+
+                // Display the rows starting with the most recent date.
+                _.each(nest.reverse(), function (leaf) {
+
+                    // Use 12am as the cutoff date to specify day 1 or day 2 in a given row.
+                    var midnight = new Date(_.first(leaf.values).timeframe.start);
+                    midnight.setHours(24, 0);
+
+                    // Bucket each row's data.
+                    var buckets = bucketSeries(leaf.values, 10, 1);
+
+                    // Finally, generate data to add to the Google timeline chart.
+                    var rows = _.map(buckets, function (bucket) {
+                        var startDate = new Date(bucket.start);
+                        var endDate = new Date(bucket.end);
+                        return [
+                            leaf.key,
+                            normalizeDate(startDate, midnight),
+                            normalizeDate(endDate, midnight)
+                        ];
+                    });
+                    dataTable.addRows(rows);
+                });
+
+                // Clear the chart before drawing a new set of data on the chart.
                 chart.clearChart();
                 chart.draw(dataTable, {
                     timeline: { colorByRowLabel: true },
                 });
             });
         };
+
+        // Fetch new data every 5 minutes.
         setInterval(win.drawChart, 5 * 60 * 1000);
         win.drawChart();
     });
