@@ -50,7 +50,7 @@ Note: Event meta data logged to Keen includes ["timestamp", "created_at" and "id
 ##dashboard
 For this project, I put together a [dashboard](http://stroud109.github.io/sensitiveimp/) that helps me quickly see the motion recorded in my home. The graphs show periods of activity in a 24 hour time period. I created the graphs using the [timeline chart](https://developers.google.com/chart/) from Google, and doing a bit of data massaging to get Keen’s data to work with the charts.
 
-![Alt text](images/dashboard.png "Sleep / Home Activity Dashboard")
+![Alt text](images/newdashboard.png "Sleep / Home Activity Dashboard")
 
 #### Additional Resources
 Electric Imp code is written in Squirrel. For a Squirrel Sublime Text highlighter, check out: [https://github.com/micheg/sublime_squirrel](https://github.com/micheg/sublime_squirrel)
