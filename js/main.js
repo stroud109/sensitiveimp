@@ -103,7 +103,7 @@
                 var all = _.flatten(_.pluck(Array.prototype.reverse.call(arguments), 'result'));
 
                 // Now we want to seperate the buckets into rows.
-                var format = d3.time.format("%m-%d");
+                var format = d3.time.format("%m/%d");
 
                 // We want to group the data into rows starting at 5pm one day
                 // and ending at 4:59pm the next day. 17 is 5pm in JS (and military time).
@@ -111,7 +111,8 @@
                     var date = new Date(bucket.timeframe.start);
                     if (date.getHours() < 17)
                         date = new Date(date.getTime() - msPerDay);
-                    return format(date);
+                    var nextDate = new Date(date.getTime() + msPerDay);
+                    return format(date) + '-' + format(nextDate);
                 };
 
                 var nest = d3.nest().key(getGroupKey).entries(all);
