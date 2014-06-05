@@ -93,6 +93,7 @@
                 return dayDeferred;
             };
 
+            // We're collecting data for 2 weeks, aka 14 days.
             var deferreds = _.map(_.range(14), fetchDayData);
 
             // Wait for all the series to load before preparing the timeline.
@@ -102,13 +103,13 @@
                 // we want all of our data to go from smallest to greatest.
                 var all = _.flatten(_.pluck(Array.prototype.reverse.call(arguments), 'result'));
 
-                // Now we want to seperate the buckets into rows.
+                // Now we want to seperate the data into rows.
                 var format = d3.time.format("%m/%d");
 
                 // We want to group the data into rows starting at 5pm one day
                 // and ending at 4:59pm the next day. 17 is 5pm in JS (and military time).
-                var getGroupKey = function (bucket) {
-                    var date = new Date(bucket.timeframe.start);
+                var getGroupKey = function (point) {
+                    var date = new Date(point.timeframe.start);
                     if (date.getHours() < 17)
                         date = new Date(date.getTime() - msPerDay);
                     var nextDate = new Date(date.getTime() + msPerDay);
