@@ -49,7 +49,7 @@
 
     };
 
-    // Use deferreds to wait for Google and KeenIO SDKs to
+    // Use deferreds to wait for Google and Keen IO SDKs to
     // both report that they have successfully loaded.
     var keenDeferred = $.Deferred();
     var googleDeferred = $.Deferred();
@@ -77,9 +77,10 @@
             var now = new Date();
             var msPerDay = 60 * 60 * 24 * 1000;
 
-            // Get activity for a given timeframe, from Keen.
+            // Get activity for a given timeframe, from Keen IO.
             var fetchDayData = function(rangeEnd) {
                 var dayDeferred = $.Deferred();
+
                 new Keen.Series("motion", {
                     analysisType: "count",
                     timeframe: {
@@ -93,6 +94,7 @@
                 return dayDeferred;
             };
 
+            // We're collecting data for 2 weeks, aka 14 days.
             var deferreds = _.map(_.range(14), fetchDayData);
 
             // Wait for all the series to load before preparing the timeline.
@@ -102,17 +104,29 @@
                 // we want all of our data to go from smallest to greatest.
                 var all = _.flatten(_.pluck(Array.prototype.reverse.call(arguments), 'result'));
 
-                // Now we want to seperate the buckets into rows.
+                // Now we want to seperate the data into rows.
                 var format = d3.time.format("%m/%d");
 
                 // We want to group the data into rows starting at 5pm one day
                 // and ending at 4:59pm the next day. 17 is 5pm in JS (and military time).
-                var getGroupKey = function (bucket) {
-                    var date = new Date(bucket.timeframe.start);
-                    if (date.getHours() < 17)
-                        date = new Date(date.getTime() - msPerDay);
-                    var nextDate = new Date(date.getTime() + msPerDay);
-                    return format(date) + '-' + format(nextDate);
+                // Right now this part has been disabled because of a pesky bug.
+                var getGroupKey = function (point) {
+                    var date = new Date(point.timeframe.start);
+                    // var dateEnd = new Date(point.timeframe.end);
+                    // if (date.getHours() > dateEnd.getHours())
+                    //     date = dateEnd;
+                    //
+                    //     TODO: debug issue that causes the last day (in some cases) to split
+                    //     the row out into two days (36h period)
+                    //
+                    // if (date.getHours() < 17) {
+                    //     // date = new Date(date.getTime() - msPerDay);
+                    //     date = new Date(date.getTime() - msPerDay);
+                    // }
+                    //
+                    // var nextDate = new Date(date.getTime() + msPerDay);
+                    // return format(date) + '-' + format(nextDate);
+                    return format(date);
                 };
 
                 var nest = d3.nest().key(getGroupKey).entries(all);
@@ -137,6 +151,9 @@
                     // Use 12am as the cutoff date to specify day 1 or day 2 in a given row.
                     var midnight = new Date(_.first(leaf.values).timeframe.start);
                     midnight.setHours(24, 0);
+
+                    console.log(leaf.key, midnight);
+                    console.log(leaf.values);
 
                     // Bucket each row's data.
                     var buckets = bucketSeries(leaf.values, 10, 1);
