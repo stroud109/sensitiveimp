@@ -73,8 +73,14 @@
             dataTable.addColumn({ type: 'date', id: 'Start' });
             dataTable.addColumn({ type: 'date', id: 'End' });
 
-            // Get the current date so we can make absolute timeframe requests.
-            var now = new Date();
+            // Define the start date so we can make absolute timeframe requests.
+            // In this case, I've used June 3rd 2014, and I've converted it to ISO time.
+            // I multiply the ISO time by 1000 because ISO is in seconds, and JavaScript
+            // uses milliseconds.
+            var now = new Date(1401778800 * 1000);
+
+            // To get the current date, update `now` so it looks like this:
+            // var now = new Date();
             var msPerDay = 60 * 60 * 24 * 1000;
 
             // Get activity for a given timeframe, from Keen IO.
