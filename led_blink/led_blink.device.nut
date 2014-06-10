@@ -4,7 +4,7 @@
 // This should show up in the Imp IDE logs.
 server.log("Hello from the device");
 
-// create a global variabled called led,
+// create a global variable called led,
 // and assign pin9 to it
 led <- hardware.pin9;
 
