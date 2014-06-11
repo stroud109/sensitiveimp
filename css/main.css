@@ -31,3 +31,16 @@ body, html {
     width: 700px;
     height: 675px;
 }
+
+.loading-text {
+    font-size: 24px;
+    width: 50%;
+    float: left;
+    padding-top: 18%;
+}
+
+.loading-img {
+    vertical-align: middle;
+    width: 35%;
+    padding-left: 5%;
+}
