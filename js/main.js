@@ -50,9 +50,10 @@
     };
 
     // Use deferreds to wait for Google and Keen IO SDKs to
-    // both report that they have successfully loaded.
+    // report that they've both successfully loaded.
     var keenDeferred = $.Deferred();
     var googleDeferred = $.Deferred();
+
 
     Keen.onChartsReady(keenDeferred.resolve);
     google.setOnLoadCallback(googleDeferred.resolve);
@@ -106,6 +107,9 @@
             // Wait for all the series to load before preparing the timeline.
             $.when.apply(win, deferreds).done(function () {
 
+                // Once the Google and Keen IO SDKs are loaded, hide the "loading" gif.
+                $('#loading').hide();
+
                 // We want to group all our data in a single array, and
                 // we want all of our data to go from smallest to greatest.
                 var all = _.flatten(_.pluck(Array.prototype.reverse.call(arguments), 'result'));
@@ -158,8 +162,9 @@
                     var midnight = new Date(_.first(leaf.values).timeframe.start);
                     midnight.setHours(24, 0);
 
-                    console.log(leaf.key, midnight);
-                    console.log(leaf.values);
+                    // Check that your values are organized the way you think they are.
+                    // console.log(leaf.key, midnight);
+                    // console.log(leaf.values);
 
                     // Bucket each row's data.
                     var buckets = bucketSeries(leaf.values, 10, 1);
@@ -185,8 +190,8 @@
             });
         };
 
-        // Fetch new data every 5 minutes.
-        setInterval(win.drawChart, 5 * 60 * 1000);
+        // If you're using live data, fetch the new data every 5 minutes.
+        // setInterval(win.drawChart, 5 * 60 * 1000);
         win.drawChart();
     });
 
